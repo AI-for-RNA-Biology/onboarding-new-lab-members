@@ -5,6 +5,7 @@ Introductory material and some tips and good practices for new lab members.
 - [UBELIX HPC](#ubelix-hpc)
     - [Basic usage](#basic-usage)
     - [Working space](#working-space)
+    - [Environments](#environments)
     - [Port forwarding](#port-forwarding)
 - [GitHub](#github)
 
@@ -27,11 +28,61 @@ Introductory material and some tips and good practices for new lab members.
 * Remember, one can use `scratch` for temporary large files at `/storage/scratch/dbmr_luisierlab/` (data get automatically deleted after 30 days).
 * Use `$TMPDDIR` as much as possible to avoid I/O bottlenecks and disk stress (especially if the job creates a lot of temporary files). [Read more](https://hpc-unibe-ch.github.io/storage/scratch/).
 
-### Port forwarding
-You might want to launch an interactive visaulisation tool (Jupyter, RStudio, etc.) on the compute node, and access it on your localhost. For this you will need to configure port forwarding. See [this section](https://hpc-unibe-ch.github.io/software/packages/JupyterLab/#setup-ssh-with-port-forwarding) of the UBELIX manual.
+### Environments
+Bioinformaticians often rely on tools that require complex environments (dependiecies, etc.). The most common strategies to handle environments on an HPC are
+1. Conda
+2. Containers
+
+#### Conda
+On UBELIX load the Anaconda3 module: `module load Anaconda3`.
+See [here](https://hpc-unibe-ch.github.io/software/installing/python/#anaconda-conda) for basic conda usage on UBELIX.
+> [!WARNING]
+> Please do not run `conda init`. Instead, initialise the conda environment using:
+> ```
+> module load Anaconda3
+> eval "$(conda shell.bash hook)"
+> ```
+> This will prevent conda from altering your `.bashrc` file and avoid loading the `base` environment at every login.
+
+> [!TIP]
+> * Create separate environments for each pipeline, subproject, or tool, etc.
+> * Simpler environments (with fewer tools and dependencies) are easier to install and maintain, and most importantly, reproduce in the future.
+> * Alternative to `eval "$(conda shell.bash hook)"` is `source activate ...`
+> ```
+> module load Anaconda3
+> source activate myenv
+> ```
+
 > [!NOTE]
-> * If you are accessing UBELIX via VS Code, or MobaXterm, you can also configure port forwarding via their UI.
-> * To be on the safe side, avoid using default port numbers (there might be unexpected errors in a rare event where multiple users run the same tool from the same compute node on the same port). Tip: You can use `$UID` as port number (make sure it's in the range 2000-65000; if your UID has 6 digits use something like ${UID:0:5}).
+> Building conda environments can take substantial CPU and memory resources. Use interactive sessions!
+
+#### Containers
+The main disadvantage of conda environments is that they are not portable. When moving to another machine, your only option is rebuilding an environment.
+In some cases, at one point, it might not be possible to reproduce a conda environment because some libraries and specific versions are not available in the conda channels anymore, or dependency trees change, or some system libraries differ, etc.
+Containers are the best way to ensure portability and reproducibility. In general, if you can build a conda environment, you can build a container.
+
+Nowadays, many bioinformatic tools are containerised (usually as Docker images), and you only need to "pull" them. 
+See [this section](https://hpc-unibe-ch.github.io/software/containers/apptainer/) for a basic Apptainer/Singularity usage on UBELIX.
+
+> [!TIP]
+> If you need to build a singularity container that relies on installing most of the libraries via conda, you can build your image starting from a Miniconda docker image (where conda is preinstalledlled), like in this definition file:
+> ```
+> Bootstrap: docker
+> From: continuumio/miniconda3:24.11.1-0
+>
+> %post
+> conda install --yes -q conda-forge::foo==1.0.0 conda-forge::bar==2.0.0
+> ```
+
+
+### Port forwarding
+If you need to launch an interactive visaulisation tool (Jupyter, RStudio, etc.) on the compute node and access it on your localhost, you will need to configure port forwarding. See [this section](https://hpc-unibe-ch.github.io/software/packages/JupyterLab/#setup-ssh-with-port-forwarding) of the UBELIX manual.
+> [!NOTE]
+> If you are accessing UBELIX via VS Code, or MobaXterm, you can also configure port forwarding via their UI.
+
+> [!TIP]
+> To be on the safe side, avoid using default port numbers (there might be unexpected errors in the rare event where multiple users run the same tool from the same compute node on the same port).
+> Instead, you can use your `$UID` as port number (make sure it's in the range 2000-65000; if your UID has 6 digits, use something like `${UID:0:5}`).
 #### Examples
 ##### 1. Run RStudio from a Singularity image
 Say you want to run RStudio from this container `/storage/research/dbmr_luisierlab/resources/img/R_RStudio/Rocker_rstudio_4.5.1/Rocker_rstudio_4.5.1.sif`.
