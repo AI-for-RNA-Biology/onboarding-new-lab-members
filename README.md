@@ -103,7 +103,7 @@ See [this section](https://hpc-unibe-ch.github.io/software/containers/apptainer/
 > Building containers can take substantial CPU and memory resources. Use interactive sessions!
 
 ### Port forwarding
-If you need to launch an interactive visaulisation tool (Jupyter, RStudio, etc.) on the compute node and access it on your localhost, you will need to configure port forwarding. See [this section](https://hpc-unibe-ch.github.io/software/packages/JupyterLab/#setup-ssh-with-port-forwarding) of the UBELIX manual.
+If you need to launch an interactive visualisation tool (Jupyter, RStudio, etc.) on the compute node and access it on your localhost, you will need to configure port forwarding. See [this section](https://hpc-unibe-ch.github.io/software/packages/JupyterLab/#setup-ssh-with-port-forwarding) of the UBELIX manual.
 > [!NOTE]
 > If you are accessing UBELIX via VS Code, or MobaXterm, you can also configure port forwarding via their UI.
 
