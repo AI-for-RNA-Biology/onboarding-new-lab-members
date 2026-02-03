@@ -46,7 +46,8 @@ If you need more resources than *gratis*, and *preemptable* QoS is not convenien
 #SBATCH --wckey dbmr_luisierlab
 ```
 > [!NOTE]
-> Only registered users can use wckey *dbmr_luisierlab* (make sure your user was added the *dbmr_luisierlab* group).
+> * Only registered users can use wckey *dbmr_luisierlab* (make sure your user was added the *dbmr_luisierlab* group).
+> * As for any sbatch option, `--account` and `--wckey` can also be passed to `srun` and `salloc`.
 
 ### Environments
 Bioinformaticians often rely on tools that require complex environments (dependiecies, etc.). The most common strategies to handle environments on an HPC are
