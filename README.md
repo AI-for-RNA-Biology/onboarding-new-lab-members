@@ -148,4 +148,4 @@ SINGULARITYENV_PASSWORD=$(whoami) singularity exec \
 * Don't deposit large files on GitHub, but you should document them (instructions to download, location on the HPC, etc.).
 * See [this](https://github.com/RLuisier/ALSdisMNs/tree/master), [this](https://github.com/RLuisier/AstroShape), and [this](https://github.com/RLuisier/my3UTRs) example of basic projects' repos, or [this](https://github.com/RLuisier/AxonLoc) for a more complex one.
 
-> In summary, your project's repo should contain everything to reproduce your work. Anyone with access to our HPC should be able to recreate all your results!
+> In summary, your repo should contain everything to reproduce your work. Anyone with access to our HPC should be able to recreate all your results!
