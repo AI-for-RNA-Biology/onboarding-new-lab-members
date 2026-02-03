@@ -5,6 +5,7 @@ Introductory material and some tips and good practices for new lab members.
 - [UBELIX HPC](#ubelix-hpc)
     - [Basic usage](#basic-usage)
     - [Working space](#working-space)
+    - [Submitting jobs](#submitting-jobs)
     - [Environments](#environments)
     - [Port forwarding](#port-forwarding)
 - [GitHub](#github)
@@ -22,11 +23,30 @@ Introductory material and some tips and good practices for new lab members.
 ### Working space
 * Make a project folder in `/storage/research/dbmr_luisierlab/projects/`. All your work should be there, including code, sessions, and results.
 * All computation should be done on UBELIX. Avoid working locally! You can run a Jupyter notebook or RStudio via [UBELIX OnDemand](https://hpc-unibe-ch.github.io/runjobs/ondemand/), use port forwarding (see below).
-* Use 'gratis' or 'preemptable' QOS when possible.
 * Keep your project space tidy.
 * Be mindful of disk quotas; they are limited! This includes total storage size, AND the number of files. Never store large uncompressed text files (e.g., FASTA/FASTQ, annotations, or other large text files). Most libraries and tools can natively import and export compressed files. Folders containing hundreds or thousands of files should be tarballed when not used anymore (if the files in the folder are already compressed, make a `.tar`, otherwise make a `.tar.gz`).
 * Remember, one can use `scratch` for temporary large files at `/storage/scratch/dbmr_luisierlab/` (data get automatically deleted after 30 days).
 * Use `$TMPDDIR` as much as possible to avoid I/O bottlenecks and disk stress (especially if the job creates a lot of temporary files). [Read more](https://hpc-unibe-ch.github.io/storage/scratch/).
+
+### Submitting jobs
+[Here](https://hpc-unibe-ch.github.io/runjobs/partitions/) you can find the list of partitions and QoS on UBELIX. Basically, there are three options we can use:
+1. `gratis` (limited resources)
+2. `preemptable` (6h max)
+3. `paygo`
+
+Use the `gratis` and `preemptable` QoS if it is reasonably feasible. For instance, say you need to process several samples, where each sample does not take very long to finish. If it's something you would do only occasionally (e.g., mapping), you could use `job_gratis` and submit the jobs in the evening; the results will be ready the next morning. If this is not feasible, say because there are too many samples to process, you could use `job_cpu_preemptable` (knowing that the 6h max allocation will be enough for each job).
+> [!NOTE]
+> *preemptable* jobs may be terminated by paygo or investor jobs at any time! In our experience, this rarely happens, but if it does, the job will be automatically rescheduled.
+> Make sure to parallelise, i.e., submit a separate job for each sample. *preemptable* jobs are convenient for many short jobs that can be submitted in parallel.
+
+#### paygo
+If you need more resources than *gratis*, and *preemptable* QoS is not convenient, you need to request a `paygo` job. For this, you need to add these two options to your sbatch script:
+```
+#SBATCH --account paygo 
+#SBATCH --wckey dbmr_luisierlab
+```
+> [!NOTE]
+> Only registered users can use wckey *dbmr_luisierlab* (make sure your user was added the *dbmr_luisierlab* group).
 
 ### Environments
 Bioinformaticians often rely on tools that require complex environments (dependiecies, etc.). The most common strategies to handle environments on an HPC are
@@ -42,7 +62,7 @@ See [here](https://hpc-unibe-ch.github.io/software/installing/python/#anaconda-c
 > module load Anaconda3
 > eval "$(conda shell.bash hook)"
 > ```
-> This will prevent conda from altering your `.bashrc` file and avoid loading the `base` environment at every login.
+> This will prevent conda from altering your `.bashrc` file and avoid loading the *base* environment at every login.
 
 > [!TIP]
 > * Create separate environments for each pipeline, subproject, or tool, etc.
@@ -65,7 +85,7 @@ Nowadays, many bioinformatic tools are containerised (usually as Docker images),
 See [this section](https://hpc-unibe-ch.github.io/software/containers/apptainer/) for a basic Apptainer/Singularity usage on UBELIX.
 
 > [!TIP]
-> If you need to build a singularity container that relies on installing most of the libraries via conda, you can build your image starting from a Miniconda docker image (where conda is preinstalledlled), like in this definition file:
+> If you need to build a singularity container that relies on installing most of the libraries via conda, you can build your image starting from a Miniconda docker image (where conda is preinstalled), like in this definition file:
 > ```
 > Bootstrap: docker
 > From: continuumio/miniconda3:24.11.1-0
@@ -74,6 +94,12 @@ See [this section](https://hpc-unibe-ch.github.io/software/containers/apptainer/
 > conda install --yes -q conda-forge::foo==1.0.0 conda-forge::bar==2.0.0
 > ```
 
+> [!NOTE]
+> For reproducibility and transparency, keep the definition file (`.def`) and the build log file (`.log`) along with the container file (`.sif`). For instance:
+> ```
+> singularity build --no-root mycontainer_v1.0.sif mycontainer_v1.0.def 2>&1 | tee mycontainer_v1.0.log
+> ```
+> Building containers can take substantial CPU and memory resources. Use interactive sessions!
 
 ### Port forwarding
 If you need to launch an interactive visaulisation tool (Jupyter, RStudio, etc.) on the compute node and access it on your localhost, you will need to configure port forwarding. See [this section](https://hpc-unibe-ch.github.io/software/packages/JupyterLab/#setup-ssh-with-port-forwarding) of the UBELIX manual.
