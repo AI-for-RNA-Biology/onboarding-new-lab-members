@@ -149,3 +149,9 @@ SINGULARITYENV_PASSWORD=$(whoami) singularity exec \
 * See [this](https://github.com/RLuisier/ALSdisMNs/tree/master), [this](https://github.com/RLuisier/AstroShape), and [this](https://github.com/RLuisier/my3UTRs) example of basic projects' repos, or [this](https://github.com/RLuisier/AxonLoc) for a more complex one.
 
 > In summary, your repo should contain everything to reproduce your work. Anyone with access to our HPC should be able to recreate all your results!
+
+#### R notebooks on GitHub
+At the moment, GitHub does not natively render R Markdown files (`.Rmd`), as it does for Jupyter notebooks (`.ipynb`). HTML files will also not be rendered.
+As a workaround, one can convert an R notebook (`.nb.html`) to PDF.
+> [!NOTE]
+> A PDF notebook is only a visualisation convenience (code syntax, plots, etc.). Always upload the equivalent `.Rmd` for reproducibility!
