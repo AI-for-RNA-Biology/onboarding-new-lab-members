@@ -9,7 +9,7 @@ Introductory material and some tips and good practices for new lab members.
     - [Environments](#environments)
     - [Port forwarding](#port-forwarding)
 - [GitHub](#github)
-
+   - [R Notebooks on GitHub](#r-notebooks-on-github)
 <br/>
 
 ## UBELIX HPC
@@ -150,8 +150,26 @@ SINGULARITYENV_PASSWORD=$(whoami) singularity exec \
 
 > In summary, your repo should contain everything to reproduce your work. Anyone with access to our HPC should be able to recreate all your results!
 
-#### R notebooks on GitHub
+#### R Notebooks on GitHub
 At the moment, GitHub does not natively render R Markdown files (`.Rmd`), as it does for Jupyter notebooks (`.ipynb`). HTML files will also not be rendered.
-As a workaround, one can convert an R notebook (`.nb.html`) to PDF.
+As a workaround, one can convert an R Notebook (`.nb.html`) to a PDF to visualise it on GitHub.
 > [!NOTE]
-> A PDF notebook is only a visualisation convenience (code syntax, plots, etc.). Always upload the equivalent `.Rmd` for reproducibility!
+> A PDF notebook is only a visualisation convenience. Always upload the equivalent `.Rmd` file for reproducibility!
+
+##### R Notebook vs Markdown
+R Notebook is a newer RStudio feature that behaves similarly to Jupyter Notebook. The biggest difference is that R Notebook has a live preview of your code (and the outputs you choose to show), which is automatically saved as an HTML document, which you don't have to `knit`.
+The practical advantage of Notebook's preview is that it does not need to execute all the code from the start to render it. You can run individual chunks of code as if you were running them in a terminal (they will behave depending on the objects loaded in your session).
+Furthermore, if you resume working, all the Notebook's rendering from the previous session will be preserved! You don't need to rerun your code to generate plots, etc. 
+> [!WARNING]
+> * ***Knitting*** will always run the entire code from the beginning! This is not convenient when working with big data because of the heavy computation that comes with it.
+> * Exporting an R Notebook to a PDF or a Word document in RStudio triggers knitting, which executes the entire code from the start of the notebook!
+
+An alternative to knitting PDF notebooks is to convert an HTML notebook into a PDF using external tools:
+1. Open the HTML notebook in your browser and export/print to PDF.
+2. Convert HTML to PDF on the command line using a tool of your choice.
+> [!NOTE]
+> For convenience, there is a Chromium container on UBELIX that can be used like this:
+> ```
+> singularity run /storage/research/dbmr_luisierlab/resources/img/chromium/chromium_124.sif --no-pdf-header-footer --print-to-pdf=mynotebook.pdf mynotebook.nb.html
+> ```
+
