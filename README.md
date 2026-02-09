@@ -50,7 +50,7 @@ If you need more resources than *gratis*, and *preemptable* QoS is not convenien
 > * As for any sbatch option, `--account` and `--wckey` can also be passed to `srun` and `salloc`.
 
 ### Environments
-Bioinformaticians often rely on tools that require complex environments (dependiecies, etc.). The most common strategies to handle environments on an HPC are
+Bioinformaticians often rely on tools that require complex environments (dependencies, etc.). The most common strategies to handle environments on an HPC are:
 1. Conda
 2. Containers
 
