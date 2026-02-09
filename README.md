@@ -22,7 +22,7 @@ Introductory material and some tips and good practices for new lab members.
 
 ### Working space
 * Make a project folder in `/storage/research/dbmr_luisierlab/projects/`. All your work should be there, including code, sessions, and results.
-* All computation should be done on UBELIX. Avoid working locally! You can run a Jupyter notebook or RStudio via [UBELIX OnDemand](https://hpc-unibe-ch.github.io/runjobs/ondemand/), use port forwarding (see below).
+* All computation should be done on UBELIX. Avoid working locally! You can run a Jupyter notebook or RStudio via [UBELIX OnDemand](https://hpc-unibe-ch.github.io/runjobs/ondemand/), or use port forwarding (see below).
 * Keep your project space tidy.
 * Be mindful of disk quotas; they are limited! This includes total storage size, AND the number of files. Never store large uncompressed text files (e.g., FASTA/FASTQ, annotations, or other large text files). Most libraries and tools can natively import and export compressed files. Folders containing hundreds or thousands of files should be tarballed when not used anymore (if the files in the folder are already compressed, make a `.tar`, otherwise make a `.tar.gz`).
 * Remember, one can use `scratch` for temporary large files at `/storage/scratch/dbmr_luisierlab/` (data get automatically deleted after 30 days).
