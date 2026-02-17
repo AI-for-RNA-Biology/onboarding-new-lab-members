@@ -15,7 +15,7 @@ Introductory material and some tips and good practices for new lab members.
 ## UBELIX HPC
 ### Basic usage
 * If you don't have a UBELIX account yet, [create one](https://hpc-unibe-ch.github.io/firststeps/accessUBELIX/).
-* Let us know your user name so that we can add it `dbmr_luisierlab` group.
+* Let us know your user name so that we can add it to the `dbmr_luisierlab` group.
 * If you have never worked on an HPC or SLURM, check [these basic tips](https://docs.google.com/document/d/1T1WE07CCaQuTME6duUjRsqCtY_z3mvwrzndhF4DK49g/edit?usp=sharing).
 > [!IMPORTANT]
 > Read the entire [UBELIX manual](https://hpc-unibe-ch.github.io/) before starting.
