@@ -127,7 +127,7 @@ See See [this section](https://hpc-unibe-ch.github.io/software/packages/VisualSt
 >
 > And two scripts in your UBELIX home directory:
 > 
-> `cpu-tunnel.sbatch`
+> `~/cpu-tunnel.sbatch`
 > ```
 > #!/bin/bash
 > #SBATCH --job-name=cpu-tunnel
@@ -172,7 +172,7 @@ See See [this section](https://hpc-unibe-ch.github.io/software/packages/VisualSt
 > wait
 > ```
 >
-> `gpu-tunnel.sbatch`
+> `~/gpu-tunnel.sbatch`
 > ```
 > #!/bin/bash
 > #SBATCH --job-name=gpu-tunnel
