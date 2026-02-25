@@ -7,6 +7,7 @@ Introductory material and some tips and good practices for new lab members.
     - [Working space](#working-space)
     - [Submitting jobs](#submitting-jobs)
     - [Environments](#environments)
+    - [Remote Computing with VS Code](#remote-computing-with-vs-code)
     - [Port forwarding](#port-forwarding)
 - [GitHub](#github)
    - [R Notebooks on GitHub](#r-notebooks-on-github)
@@ -101,6 +102,121 @@ See [this section](https://hpc-unibe-ch.github.io/software/containers/apptainer/
 > singularity build --no-root mycontainer_v1.0.sif mycontainer_v1.0.def 2>&1 | tee mycontainer_v1.0.log
 > ```
 > Building containers can take substantial CPU and memory resources. Use interactive sessions!
+
+### Remote Computing with VS Code
+It might be more advantageous to use your local (and customised) VS Code, and connect it to a Jupyter notebook running on a compute node.
+See See [this section](https://hpc-unibe-ch.github.io/software/packages/VisualStudioCode/) of the UBELIX manual.
+> [!TIP]
+> You can use two scripts similar to `~/code-tunnel.sbatch` described in the manual; one for CPU jobs and another for GPU jobs.
+> In this case, you should have two entries in your `.ssh/config:`:
+> ```
+> Host gpu-code-tunnel
+>   ProxyCommand ssh ubelix "nc \\$(squeue --me --name=code-tunnel --states=R -h -O NodeList,Comment)"
+>   StrictHostKeyChecking no
+>   ServerAliveInterval 240
+>   ServerAliveCountMax 2
+>   User <name>
+>
+> Host cpu-code-tunnel
+>   ProxyCommand ssh ubelix "nc \\$(squeue --me --name=code-tunnel --states=R -h -O NodeList,Comment)"
+>   StrictHostKeyChecking no
+>   ServerAliveInterval 240
+>   ServerAliveCountMax 2
+>   User <name>
+> ```
+>
+> And two scripts in your UBELIX home directory:
+> 
+> `cpu-tunnel.sbatch`
+> ```
+> #!/bin/bash
+> #SBATCH --job-name=cpu-tunnel
+> #SBATCH --signal=B:TERM@60
+> #SBATCH --time=06:00:00
+> #SBATCH --partition=epyc2
+> #SBATCH --qos=job_cpu_preemptable
+> #SBATCH --nodes=1
+> #SBATCH --cpus-per-task=8
+> #SBATCH --mem=64GB
+> 
+> # -----------------------------------------------------------------------------
+> # USER CODE TUNNEL SETTINGS
+> # -----------------------------------------------------------------------------
+> 
+> module avail CUDA/12.6.0
+> 
+> export CUDA_HOME=/software.9/software/CUDA/12.6.0
+> export CUDA_PATH=/software.9/software/CUDA/12.6.0
+> export CUPY_NVRTC_INCLUDE_PATH=$CUDA_HOME/include
+>  
+> cleanup() {
+>     echo "Caught signal - removing SLURM env file"
+>     rm -f ~/.code-tunnel-env.bash
+> }
+> trap 'cleanup' SIGTERM
+> 
+> KEY=${HOME}/.ssh/id_ed25519_ubelix_internal
+> if [ ! -f "$KEY" ]; then
+>     echo "[INFO] Generating internal SSH key..."
+>     ssh-keygen -t ed25519 -N "" -f "$KEY"
+>     cat "${KEY}.pub" >> "${HOME}/.ssh/authorized_keys"
+> fi
+> chmod 600 "${HOME}/.ssh/authorized_keys"
+> 
+> PORT=$(python3 -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()')
+> scontrol update JobId="$SLURM_JOB_ID" Comment="$PORT"
+> env | awk -F= '$1~/^SLURM_/ || $1=="TMPDIR" {print "export "$0}' > ~/.code-tunnel-env.bash
+> 
+> echo "Starting sshd on port $PORT"
+> /usr/sbin/sshd -D -p "${PORT}" -f /dev/null -h "${KEY}" -E "${HOME}/sshd-${SLURM_JOB_ID}.log" &
+> wait
+> ```
+>
+> `gpu-tunnel.sbatch`
+> ```
+> #!/bin/bash
+> #SBATCH --job-name=gpu-tunnel
+> #SBATCH --signal=B:TERM@60
+> #SBATCH --time=06:00:00
+> #SBATCH --cpus-per-task=8
+> #SBATCH --partition=gpu-invest
+> #SBATCH --qos=job_gpu_preemptable
+> #SBATCH --gres=gpu:h100:1
+> #SBATCH --nodes=1
+> 
+> # -----------------------------------------------------------------------------
+> # USER CODE TUNNEL SETTINGS
+> # -----------------------------------------------------------------------------
+> 
+> module avail CUDA/12.6.0
+> 
+> export CUDA_HOME=/software.9/software/CUDA/12.6.0
+> export CUDA_PATH=/software.9/software/CUDA/12.6.0
+> export CUPY_NVRTC_INCLUDE_PATH=$CUDA_HOME/include
+>  
+> cleanup() {
+>     echo "Caught signal - removing SLURM env file"
+>     rm -f ~/.code-tunnel-env.bash
+> }
+> trap 'cleanup' SIGTERM
+> 
+> KEY=${HOME}/.ssh/id_ed25519_ubelix_internal
+> if [ ! -f "$KEY" ]; then
+>     echo "[INFO] Generating internal SSH key..."
+>     ssh-keygen -t ed25519 -N "" -f "$KEY"
+>     cat "${KEY}.pub" >> "${HOME}/.ssh/authorized_keys"
+> fi
+> chmod 600 "${HOME}/.ssh/authorized_keys"
+> 
+> PORT=$(python3 -c 'import socket; s=socket.socket(); s.bind(("", 0)); print(s.getsockname()[1]); s.close()')
+> scontrol update JobId="$SLURM_JOB_ID" Comment="$PORT"
+> env | awk -F= '$1~/^SLURM_/ || $1=="TMPDIR" {print "export "$0}' > ~/.code-tunnel-env.bash
+> 
+> echo "Starting sshd on port $PORT"
+> /usr/sbin/sshd -D -p "${PORT}" -f /dev/null -h "${KEY}" -E "${HOME}/sshd-${SLURM_JOB_ID}.log" &
+> wait
+> ```
+
 
 ### Port forwarding
 If you need to launch an interactive visualisation tool (Jupyter, RStudio, etc.) on the compute node and access it on your localhost, you will need to configure port forwarding. See [this section](https://hpc-unibe-ch.github.io/software/packages/JupyterLab/#setup-ssh-with-port-forwarding) of the UBELIX manual.
