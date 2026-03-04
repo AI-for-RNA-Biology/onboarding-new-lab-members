@@ -110,14 +110,14 @@ See See [this section](https://hpc-unibe-ch.github.io/software/packages/VisualSt
 > You can use two scripts similar to `~/code-tunnel.sbatch` described in the manual; one for CPU jobs and another for GPU jobs.
 > In this case, you should have two entries in your `.ssh/config:`:
 > ```
-> Host gpu-code-tunnel
+> Host cpu-code-tunnel
 >   ProxyCommand ssh ubelix "nc \\$(squeue --me --name=cpu-tunnel --states=R -h -O NodeList,Comment)"
 >   StrictHostKeyChecking no
 >   ServerAliveInterval 240
 >   ServerAliveCountMax 2
 >   User <name>
 >
-> Host cpu-code-tunnel
+> Host gpu-code-tunnel
 >   ProxyCommand ssh ubelix "nc \\$(squeue --me --name=gpu-tunnel --states=R -h -O NodeList,Comment)"
 >   StrictHostKeyChecking no
 >   ServerAliveInterval 240
