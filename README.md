@@ -28,6 +28,7 @@ Introductory material and some tips and good practices for new lab members.
 * Be mindful of disk quotas; they are limited! This includes total storage size, AND the number of files. Never store large uncompressed text files (e.g., FASTA/FASTQ, annotations, or other large text files). Most libraries and tools can natively import and export compressed files. Folders containing hundreds or thousands of files should be tarballed when not used anymore (if the files in the folder are already compressed, make a `.tar`, otherwise make a `.tar.gz`).
 * Remember, one can use `scratch` for temporary large files at `/storage/scratch/dbmr_luisierlab/` (data get automatically deleted after 30 days).
 * Use `$TMPDDIR` as much as possible to avoid I/O bottlenecks and disk stress (especially if the job creates a lot of temporary files). [Read more](https://hpc-unibe-ch.github.io/storage/scratch/).
+* Large datasets should be kept in `/storage/research/dbmr_luisierlab/database`, and referenced in the shared Google doc [LUISIERLAB_DATASETS](https://docs.google.com/spreadsheets/d/1r-Vroqe0yVNvJntPAV4GuW3Q86MMWi8zDqqrZzocIEU).
 
 ### Submitting jobs
 [Here](https://hpc-unibe-ch.github.io/runjobs/partitions/) you can find the list of partitions and QoS on UBELIX. Basically, there are three options we can use:
