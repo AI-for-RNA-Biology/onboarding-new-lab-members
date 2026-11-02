@@ -317,7 +317,7 @@ Pay special attention to:
 > Submit the jobs to the compute nodes.
  
 #### `.tar` vs. `.tar.gz`
-It depends on the folder's content. If the folder contains many small compressible files, it is better to tarball it into a `.tar.gz` to reduce its size.
+It depends on the folder's content. If the folder contains small compressible files, it is better to tarball it into a `.tar.gz` to reduce its size.
 But if the folder contains mostly compressed files (`.gz`, `.h5`, etc.), then you should tarball it into a `.tar`.
 In general, an uncompressed `.tar` is much faster to create and read from. If you have large files, it is better to `gzip` them individually, and optionally create a `.tar` from the entire folder (if there are too many files in it).
 
