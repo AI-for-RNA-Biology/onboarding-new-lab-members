@@ -298,8 +298,8 @@ An alternative to knitting PDF notebooks is to convert an HTML notebook into a P
 Before leaving the lab, take time to tidy up your working space!
 
 Pay special attention to:
-* Large files and folders
-* Folders with thousands of files
+* **Large files and folders**
+* **Folders with thousands of files**
 
 1. Delete what is safe to delete.
 2. Add READMEs to folders.
