@@ -303,7 +303,7 @@ Pay special attention to:
 
 1. Delete what is safe to delete.
 2. Add READMEs to folders.
-3. Compress what is compressible (text files, images, .npy files, etc).
+3. Compress what is compressible (text files, images, `.npy` files, etc).
 4. Tarball entire folders when applicable.
 
 > [!NOTE]
