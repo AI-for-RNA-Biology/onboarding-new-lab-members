@@ -11,6 +11,7 @@ Introductory material and some tips and good practices for new lab members.
     - [Port forwarding](#port-forwarding)
 - [GitHub](#github)
    - [R Notebooks on GitHub](#r-notebooks-on-github)
+- [Offboarding](#offboarding)
 <br/>
 
 ## UBELIX HPC
@@ -293,3 +294,37 @@ An alternative to knitting PDF notebooks is to convert an HTML notebook into a P
 > singularity run /storage/research/dbmr_luisierlab/resources/img/chromium/chromium_124.sif --no-pdf-header-footer --print-to-pdf=mynotebook.pdf mynotebook.nb.html
 > ```
 
+## Offboarding
+Before leaving the lab, take time to tidy up your working space!
+
+Pay special attention to:
+* Large files and folders
+* Folders with thousands of files
+
+1. Delete what is safe to delete.
+2. Add READMEs to folders.
+3. Compress what is compressible (text files, images, .npy files, etc).
+4. Tarball entire folders when applicable.
+
+> [!NOTE]
+> When a folder contains a large number of files (several thousand), you should always tarball it to reduce the number of files stored on disk:
+> 1. Make a list of files in the folder for easy lookup in the future (`tree myfolder > myfolder.files.txt`).
+> 2. Tarball without compression (`tar -cf myfolder.tar myfolder`), or with compression (`tar -czf myfolder.tar.gz myfolder`); see below.
+> 3. Delete the folder.
+
+> [!WARNING]
+> Do not tarball and compress files on the login node!
+> Submit the jobs to the compute nodes.
+ 
+#### `.tar` vs. `.tar.gz`
+It depends on the folder's content. If the folder contains many small compressible files, it is better to tarball it into a `.tar.gz` to reduce its size.
+But if the folder contains mostly compressed files (.gz, h5, etc.), then you should tarball it into a `.tar`.
+In general, an uncompressed `.tar` is much faster to create and read from. If you have large files, it is better to `gzip` them individually, and optionally create a `.tar` from the entire folder (if there are too many files in it).
+
+> [!WARNING]
+> Do not create `.tar.gz` from large folders (100+ GB). This will take a lot of CPU time and will be equally impractical when retrieving files in the future.
+
+> [!TIP]
+> To find the size of a folder: `du -sh myfolder`
+> 
+> To find the number of files in a folder: `find myfolder -type f | wc -l`
